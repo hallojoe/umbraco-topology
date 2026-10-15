@@ -1,10 +1,19 @@
-# Umbraco topology example
+# Start your next Umbraco project with a working local topology
 
-**Developers! Developers! Developers! Umbraco, Aspire, and the whole local stack. Let's go!**
+**One template gives your team content management, delivery, shared services, and local development tools.**
 
-Build on CM. Serve from a CD pool. Pick your cache and media. See SQL, email, proxy, and MCP work together.
+Your first day can produce a site you can show. Generate an Umbraco 17 solution with CM and a CD pool. Get SQL Server, cache, media, and local email in the same setup. Aspire starts the resources and shows their health. A published sample site gives you pages to inspect on first boot.
 
-See the [technical README](../README.md) for installation, Python setup, MCP setup, and run commands.
+## Give your team a head start
+
+- Publish content in CM. Check it through CD nodes that share the database and media store.
+- Choose Redis or SQL cache. Choose Blob or filesystem media. Run with Docker or Podman.
+- Add YARP when you need public CM and CD routes. Inspect health and telemetry in Aspire.
+- Connect Codex or Claude Code through local MCP after CM is ready.
+
+Build content models, pages, and delivery rules on a setup your team can repeat. Show a working site while the ideas are fresh.
+
+## See the topology
 
 ```mermaid
 flowchart LR
@@ -25,7 +34,19 @@ flowchart LR
     end
 ```
 
-CD instances share the same database, cache, and media store. Redis and Blob media are the shown options.
+CD instances share the same database, cache, and media store. The example below selects Redis and Blob media.
+
+## Show the work sooner
+
+Start Aspire and watch the resources come online. Open the published sample site on CM and CD. Inspect test email in Mailpit and service health in the dashboard. When you change content, check the delivery path through the same local topology. Your team gets a clear starting point for demos, onboarding, and feature work.
+
+## Get the template now
+
+Install the current prerelease. Then use the annotated command below to generate your solution.
+
+```bash
+dotnet new install Casko.UmbracoTopology.Templates@0.0.1-pre
+```
 
 ```bash
 # Set the template options.
@@ -71,4 +92,6 @@ template_options=(
 dotnet new casko-umbraco-topology "${template_options[@]}"
 ```
 
-**Build it. Run it. Show it!**
+The generated README gives you the run commands and local addresses. The [technical README](../README.md) covers certificates, Python setup, MCP, and verification.
+
+**Install the template now. Generate your solution. Show the site you came to build.**
