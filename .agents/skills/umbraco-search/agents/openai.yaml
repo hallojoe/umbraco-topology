@@ -1,0 +1,6 @@
+interface:
+  display_name: "Umbraco Search"
+  short_description: "Configure the new Umbraco Search and provider."
+  default_prompt: "Use $umbraco-search to add Umbraco Search to this project."
+policy:
+  allow_implicit_invocation: true

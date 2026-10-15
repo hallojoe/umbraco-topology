@@ -1,0 +1,8 @@
+{
+  "name": "__PROJECT_SLUG__-mcp",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@umbraco-cms/mcp-dev": "17.6.10"
+  }
+}

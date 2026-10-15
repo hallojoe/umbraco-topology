@@ -1,0 +1,6 @@
+interface:
+  display_name: "Umbraco Automate"
+  short_description: "Install Automate and configure workflows."
+  default_prompt: "Use $umbraco-automate to add an automation workflow to this project."
+policy:
+  allow_implicit_invocation: true

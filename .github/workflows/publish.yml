@@ -1,0 +1,100 @@
+name: Publish template package
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+concurrency:
+  group: publish-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  PACKAGE_ID: Casko.UmbracoTopology.Templates
+  PROJECT_FILE: src/UmbracoTopology.TemplatePack.csproj
+  GITHUB_PACKAGE_SOURCE: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+  NUGET_PACKAGE_SOURCE: https://api.nuget.org/v3/index.json
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Validate release version and branch
+        id: version
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          NUGET_USER: ${{ vars.NUGET_USER }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$NUGET_USER" ]]; then
+            echo '::error::Set the NUGET_USER repository variable to the NuGet.org profile name.'
+            exit 1
+          fi
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]; then
+            echo "::error::Release tag must match v1.0.0 or v1.0.0-beta: $RELEASE_TAG"
+            exit 1
+          fi
+          VERSION="${RELEASE_TAG#v}"
+          git fetch origin main:refs/remotes/origin/main
+          TAG_COMMIT="$(git rev-parse "${RELEASE_TAG}^{commit}")"
+          if ! git merge-base --is-ancestor "$TAG_COMMIT" refs/remotes/origin/main; then
+            if [[ "$VERSION" != *-* ]]; then
+              echo '::error::A release outside main needs a prerelease suffix, such as -pre or -beta.'
+              exit 1
+            fi
+          fi
+          echo "value=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Pack release tag
+        env:
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          dotnet pack "$PROJECT_FILE" --configuration Release \
+            -p:PackageVersion="$PACKAGE_VERSION" --output artifacts
+          test -f "artifacts/$PACKAGE_ID.$PACKAGE_VERSION.nupkg"
+      - name: Install and build packed template
+        shell: bash
+        env:
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          set -euo pipefail
+          HIVE="$(mktemp -d)"
+          PROJECT="$(mktemp -d)"
+          trap 'rm -rf "$HIVE" "$PROJECT"' EXIT
+          dotnet new install "artifacts/$PACKAGE_ID.$PACKAGE_VERSION.nupkg" --debug:custom-hive "$HIVE"
+          dotnet new casko-umbraco-topology --name Release.Check \
+            --output "$PROJECT" --allow-scripts Yes --debug:custom-hive "$HIVE"
+          dotnet build "$PROJECT/Release.Check.slnx"
+      - name: NuGet trusted publishing login
+        id: nuget_login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+      - name: Publish to GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          dotnet nuget push "artifacts/$PACKAGE_ID.$PACKAGE_VERSION.nupkg" \
+            --source "$GITHUB_PACKAGE_SOURCE" --api-key "$GITHUB_TOKEN" --skip-duplicate
+      - name: Publish to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
+          PACKAGE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          dotnet nuget push "artifacts/$PACKAGE_ID.$PACKAGE_VERSION.nupkg" \
+            --source "$NUGET_PACKAGE_SOURCE" --api-key "$NUGET_API_KEY"

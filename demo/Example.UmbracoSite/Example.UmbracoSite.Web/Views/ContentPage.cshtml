@@ -1,0 +1,52 @@
+﻿@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var root = Model.Root();
+    var title = Model.Value<string>("title");
+    if (string.IsNullOrWhiteSpace(title)) { title = Model.Name; }
+    var description = Model.Value<string>("description");
+    var sections = root.Children().Where(page => page.IsVisible()).OrderBy(page => page.SortOrder).ToList();
+    var children = Model.Children().Where(page => page.IsVisible()).OrderBy(page => page.SortOrder).ToList();
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title</title>
+    @if (!string.IsNullOrWhiteSpace(description)) { <meta name="description" content="@description" /> }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="border-bottom bg-body-tertiary">
+        <div class="container py-3 d-flex flex-wrap align-items-center gap-3">
+            <a class="fw-bold text-decoration-none text-body me-auto" href="@root.Url()">@root.Name</a>
+            <nav aria-label="Primary navigation" class="d-flex flex-wrap gap-3">
+                @foreach (var item in sections) { <a class="link-body-emphasis" href="@item.Url()">@item.Name</a> }
+            </nav>
+        </div>
+    </header>
+    <main class="container py-5 flex-grow-1">
+        <nav aria-label="Breadcrumb"><ol class="breadcrumb">
+            @foreach (var ancestor in Model.Ancestors().OrderBy(page => page.Level)) { <li class="breadcrumb-item"><a href="@ancestor.Url()">@ancestor.Name</a></li> }
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol></nav>
+        <article class="col-lg-8">
+            <h1 class="display-5 fw-bold mb-3">@title</h1>
+            @if (!string.IsNullOrWhiteSpace(description)) { <p class="lead">@description</p> }
+        </article>
+        @if (children.Count > 0) {
+            <section class="mt-5" aria-labelledby="more-heading"><h2 id="more-heading" class="h3 mb-4">More to explore</h2>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    @foreach (var child in children) { <div class="col"><article class="card h-100 shadow-sm"><div class="card-body p-4">
+                        <h3 class="h5 card-title"><a class="stretched-link text-decoration-none" href="@child.Url()">@child.Name</a></h3>
+                        <p class="card-text text-body-secondary mb-0">@(child.Value<string>("description"))</p>
+                    </div></article></div> }
+                </div>
+            </section>
+        }
+    </main>
+    <footer class="border-top bg-body-tertiary"><div class="container py-4 small text-body-secondary">© @DateTime.UtcNow.Year @root.Name</div></footer>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Example.UmbracoSite.AppHost/Example.UmbracoSite.AppHost.csproj" />
+  <Project Path="Example.UmbracoSite.Web/Example.UmbracoSite.Web.csproj" />
+  <Project Path="Example.UmbracoSite.ServiceDefaults/Example.UmbracoSite.ServiceDefaults.csproj" />
+  <Project Path="Example.UmbracoSite.Yarp/Example.UmbracoSite.Yarp.csproj" />
+</Solution>

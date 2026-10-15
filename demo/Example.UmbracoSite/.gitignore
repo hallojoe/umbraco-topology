@@ -1,0 +1,9 @@
+.local/
+**/bin/
+**/obj/
+**/node_modules/
+**/appsettings.Local.json
+.mcp.json
+.codex/config.toml
+Example.UmbracoSite.Web/uSync/v17/Media/topology-smoke-image.config
+**/umbraco/Data/

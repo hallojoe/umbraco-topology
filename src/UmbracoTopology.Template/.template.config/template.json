@@ -1,0 +1,379 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Casko",
+  "classifications": [
+    "Web",
+    "Umbraco",
+    "Aspire"
+  ],
+  "identity": "Casko.UmbracoTopology.Local",
+  "name": "Umbraco local CM/CD topology",
+  "shortName": "casko-umbraco-topology",
+  "sourceName": "Casko.UmbracoTopology",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "guids": [
+    "83c2573e-b263-416a-ac2a-fc4d4d142f91",
+    "6fc1480e-e27f-4409-88ad-35d519332731"
+  ],
+  "symbols": {
+    "CacheProvider": {
+      "type": "parameter",
+      "dataType": "choice",
+      "defaultValue": "redis",
+      "choices": [
+        {
+          "choice": "redis"
+        },
+        {
+          "choice": "mssql"
+        }
+      ],
+      "replaces": "__CACHE_PROVIDER__",
+      "description": "Distributed cache provider."
+    },
+    "MediaProvider": {
+      "type": "parameter",
+      "dataType": "choice",
+      "defaultValue": "blob",
+      "choices": [
+        {
+          "choice": "blob"
+        },
+        {
+          "choice": "filesystem"
+        }
+      ],
+      "replaces": "__MEDIA_PROVIDER__",
+      "description": "Shared media provider."
+    },
+    "ContainerRuntime": {
+      "type": "parameter",
+      "dataType": "choice",
+      "defaultValue": "podman",
+      "choices": [
+        {
+          "choice": "podman"
+        },
+        {
+          "choice": "docker"
+        },
+        {
+          "choice": "auto"
+        }
+      ],
+      "description": "Aspire container runtime; auto omits the profile override."
+    },
+    "AdminEmail": {
+      "type": "parameter",
+      "dataType": "text",
+      "defaultValue": "admin@cm.dev.localhost",
+      "replaces": "__ADMIN_EMAIL__",
+      "description": "First-install administrator email."
+    },
+    "AdminPassword": {
+      "type": "parameter",
+      "dataType": "text",
+      "defaultValue": "1234567890",
+      "replaces": "__ADMIN_PASSWORD__",
+      "description": "First-install administrator password (visible in command arguments)."
+    },
+    "SqlPassword": {
+      "type": "parameter",
+      "dataType": "text",
+      "defaultValue": "LocalSql!1234567890",
+      "replaces": "__SQL_PASSWORD__",
+      "description": "Local SQL Server password (visible in command arguments)."
+    },
+    "ApiUserEmail": {
+      "type": "parameter",
+      "dataType": "text",
+      "defaultValue": "apiuser@dev.localhost",
+      "replaces": "__API_USER_EMAIL__",
+      "description": "Provisioned API user email and username."
+    },
+    "ApiClientId": {
+      "type": "parameter",
+      "dataType": "text",
+      "defaultValue": "umbraco-back-office-api-user",
+      "replaces": "__API_CLIENT_ID__",
+      "description": "Provisioned API client ID; must start with umbraco-back-office-."
+    },
+    "ApiClientSecret": {
+      "type": "parameter",
+      "dataType": "text",
+      "defaultValue": "1234567890",
+      "replaces": "__API_CLIENT_SECRET__",
+      "description": "Provisioned API secret (visible in command arguments)."
+    },
+    "CredentialValidation": {
+      "type": "parameter",
+      "dataType": "text",
+      "isRequired": "(AdminEmail == \"\" || AdminPassword == \"\" || SqlPassword == \"\" || ApiUserEmail == \"\" || ApiClientId == \"\" || ApiClientSecret == \"\")",
+      "description": "Validation: email, passwords, client ID, and secret cannot be empty."
+    },
+    "CmPort": {
+      "type": "parameter", "dataType": "text", "defaultValue": "auto",
+      "replaces": "__CM_PORT__", "description": "Private CM HTTPS port; auto keeps the generated port."
+    },
+    "CdPort": {
+      "type": "parameter", "dataType": "text", "defaultValue": "auto",
+      "replaces": "__CD_PORT__", "description": "Private CD1 HTTPS port; CD2 uses the next port."
+    },
+    "ProxyPort": {
+      "type": "parameter", "dataType": "text", "defaultValue": "4443",
+      "replaces": "__PROXY_PORT__", "description": "Shared YARP HTTPS port."
+    },
+    "CmDomain": {
+      "type": "parameter", "dataType": "text", "defaultValue": "cm.dev.localhost",
+      "replaces": "__CM_DOMAIN__", "description": "Public CM host when YARP is enabled."
+    },
+    "CdDomain": {
+      "type": "parameter", "dataType": "text", "defaultValue": "cd.dev.localhost",
+      "replaces": "__CD_DOMAIN__", "description": "Public CD host when YARP is enabled."
+    },
+    "ReverseProxy": {
+      "type": "parameter", "dataType": "bool", "defaultValue": "false",
+      "replaces": "__REVERSE_PROXY__", "description": "Include the YARP CM/CD reverse proxy."
+    },
+    "ProjectSlugRaw": {
+      "type": "generated",
+      "generator": "regex",
+      "parameters": {
+        "source": "name",
+        "steps": [
+          {
+            "regex": "[^A-Za-z0-9]+",
+            "replacement": "-"
+          },
+          {
+            "regex": "(^-+|-+$)",
+            "replacement": ""
+          }
+        ]
+      }
+    },
+    "ProjectSlug": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "ProjectSlugRaw",
+        "toLower": true
+      },
+      "replaces": "__PROJECT_SLUG__"
+    },
+    "SingleHttps": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 24000,
+        "high": 24999,
+        "fallback": 24101
+      },
+      "replaces": "24101"
+    },
+    "SingleHttp": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 23000,
+        "high": 23999,
+        "fallback": 23101
+      },
+      "replaces": "23101"
+    },
+    "CmHttps": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 64000,
+        "high": 64999,
+        "fallback": 64101
+      },
+      "replaces": "64101"
+    },
+    "CmHttp": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 54000,
+        "high": 54999,
+        "fallback": 54101
+      },
+      "replaces": "54101"
+    },
+    "Cd1Https": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 44000,
+        "high": 44999,
+        "fallback": 44101
+      },
+      "replaces": "44101"
+    },
+    "Cd1Http": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 34000,
+        "high": 34999,
+        "fallback": 34101
+      },
+      "replaces": "34101"
+    },
+    "Cd2Https": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 45000,
+        "high": 45999,
+        "fallback": 45102
+      },
+      "replaces": "44102"
+    },
+    "Cd2Http": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 35000,
+        "high": 35999,
+        "fallback": 35102
+      },
+      "replaces": "34102"
+    },
+    "AppHttps": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 17000,
+        "high": 17999,
+        "fallback": 17102
+      },
+      "replaces": "17102"
+    },
+    "AppHttp": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 15000,
+        "high": 15999,
+        "fallback": 15131
+      },
+      "replaces": "15131"
+    },
+    "Otlp": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 21000,
+        "high": 21999,
+        "fallback": 21239
+      },
+      "replaces": "21239"
+    },
+    "ResourceService": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 22000,
+        "high": 22999,
+        "fallback": 22201
+      },
+      "replaces": "22201"
+    },
+    "CACHE_REDIS": {
+      "type": "computed",
+      "value": "(CacheProvider == \"redis\")"
+    },
+    "CACHE_MSSQL": {
+      "type": "computed",
+      "value": "(CacheProvider == \"mssql\")"
+    },
+    "MEDIA_BLOB": {
+      "type": "computed",
+      "value": "(MediaProvider == \"blob\")"
+    },
+    "REVERSE_PROXY": {
+      "type": "computed",
+      "value": "(ReverseProxy == true)"
+    }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "exclude": [
+        ".template.config/**",
+        "template-variants/**",
+        "credential-seed/**",
+        "**/bin/**",
+        "**/obj/**",
+        "**/node_modules/**",
+        "**/__pycache__/**",
+        "**/*.pyc",
+        "**/.local/**",
+        "**/*.user",
+        "**/.mcp.json",
+        "Casko.UmbracoTopology.Web/Properties/launchSettings.json",
+        "Casko.UmbracoTopology.AppHost/Properties/launchSettings.json"
+      ]
+    },
+    {
+      "source": "template-variants/media-blob",
+      "target": "./",
+      "condition": "(MediaProvider == \"blob\")"
+    },
+    {
+      "source": "template-variants/media-filesystem",
+      "target": "./",
+      "condition": "(MediaProvider == \"filesystem\")"
+    },
+    {
+      "source": "template-variants/runtime-podman",
+      "target": "./",
+      "condition": "(ContainerRuntime == \"podman\")"
+    },
+    {
+      "source": "template-variants/runtime-docker",
+      "target": "./",
+      "condition": "(ContainerRuntime == \"docker\")"
+    },
+    {
+      "source": "template-variants/runtime-auto",
+      "target": "./",
+      "condition": "(ContainerRuntime == \"auto\")"
+    },
+    {
+      "source": "credential-seed",
+      "target": ".local"
+    },
+    {
+      "source": "template-variants/reverse-proxy",
+      "target": "./",
+      "condition": "(ReverseProxy == true)"
+    }
+  ],
+  "primaryOutputs": [
+    {
+      "path": "Casko.UmbracoTopology.slnx"
+    }
+  ],
+  "postActions": [
+    {
+      "actionId": "3A7C4B45-1F5D-4A30-959A-51B88E82B5D2",
+      "description": "Set ports and public URLs",
+      "continueOnError": false,
+      "args": {
+        "executable": "python3",
+        "args": "scripts/configure-scaffold.py",
+        "redirectStandardOutput": false,
+        "redirectStandardError": false
+      },
+      "manualInstructions": [{"text": "Run python3 scripts/configure-scaffold.py before building."}]
+    }
+  ]
+}

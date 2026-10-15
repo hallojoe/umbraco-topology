@@ -1,0 +1,8 @@
+{
+  "cmPort": "64222",
+  "cdPort": "44222",
+  "proxyPort": "4443",
+  "cmDomain": "cm.dev.localhost",
+  "cdDomain": "cd.dev.localhost",
+  "reverseProxy": "True"
+}

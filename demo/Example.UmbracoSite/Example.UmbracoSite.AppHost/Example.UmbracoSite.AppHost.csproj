@@ -1,0 +1,28 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.5.4">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
+    <UserSecretsId>54e9239e-bf5e-46a1-8f45-0c59971348d2</UserSecretsId>
+    <TopologyCacheProvider>mssql</TopologyCacheProvider>
+    <TopologyMediaProvider>filesystem</TopologyMediaProvider>
+    <TopologyReverseProxy>True</TopologyReverseProxy>
+    <DefineConstants Condition="'$(TopologyCacheProvider)' == 'redis'">$(DefineConstants);CACHE_REDIS</DefineConstants>
+    <DefineConstants Condition="'$(TopologyMediaProvider)' == 'blob'">$(DefineConstants);MEDIA_BLOB</DefineConstants>
+    <DefineConstants Condition="'$(TopologyReverseProxy)' == 'True'">$(DefineConstants);REVERSE_PROXY</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Example.UmbracoSite.Web/Example.UmbracoSite.Web.csproj" />
+    <ProjectReference Include="../Example.UmbracoSite.Yarp/Example.UmbracoSite.Yarp.csproj" Condition="'$(TopologyReverseProxy)' == 'True'" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="Aspire.Hosting.Redis" Condition="'$(TopologyCacheProvider)' == 'redis'" />
+    <PackageReference Include="Aspire.Hosting.Azure.Storage" Condition="'$(TopologyMediaProvider)' == 'blob'" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.SqlServer.Extensions" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.MailPit" />
+  </ItemGroup>
+
+</Project>

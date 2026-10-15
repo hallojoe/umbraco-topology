@@ -1,0 +1,8 @@
+{
+  "cmPort": "__CM_PORT__",
+  "cdPort": "__CD_PORT__",
+  "proxyPort": "__PROXY_PORT__",
+  "cmDomain": "__CM_DOMAIN__",
+  "cdDomain": "__CD_DOMAIN__",
+  "reverseProxy": "__REVERSE_PROXY__"
+}

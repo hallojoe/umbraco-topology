@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Casko.UmbracoTopology.AppHost/Casko.UmbracoTopology.AppHost.csproj" />
+  <Project Path="Casko.UmbracoTopology.Web/Casko.UmbracoTopology.Web.csproj" />
+  <Project Path="Casko.UmbracoTopology.ServiceDefaults/Casko.UmbracoTopology.ServiceDefaults.csproj" />
+</Solution>

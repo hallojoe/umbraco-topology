@@ -1,0 +1,50 @@
+﻿@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title");
+    if (string.IsNullOrWhiteSpace(title)) { title = Model.Name; }
+    var description = Model.Value<string>("description");
+    var sections = Model.Children().Where(page => page.IsVisible()).OrderBy(page => page.SortOrder).ToList();
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title</title>
+    @if (!string.IsNullOrWhiteSpace(description)) { <meta name="description" content="@description" /> }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="border-bottom bg-body-tertiary">
+        <div class="container py-3 d-flex flex-wrap align-items-center gap-3">
+            <a class="fw-bold text-decoration-none text-body me-auto" href="@Model.Url()">@Model.Name</a>
+            <nav aria-label="Primary navigation" class="d-flex flex-wrap gap-3">
+                @foreach (var item in sections) { <a class="link-body-emphasis" href="@item.Url()">@item.Name</a> }
+            </nav>
+        </div>
+    </header>
+    <main class="flex-grow-1">
+        <section class="bg-primary-subtle py-5">
+            <div class="container py-4">
+                <p class="text-uppercase fw-semibold text-primary mb-2">Welcome</p>
+                <h1 class="display-4 fw-bold">@title</h1>
+                @if (!string.IsNullOrWhiteSpace(description)) { <p class="lead col-lg-8 mb-0">@description</p> }
+            </div>
+        </section>
+        <section class="container py-5" aria-labelledby="explore-heading">
+            <h2 id="explore-heading" class="h3 mb-4">Explore the site</h2>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                @foreach (var item in sections) {
+                    <div class="col"><article class="card h-100 shadow-sm"><div class="card-body p-4">
+                        <h3 class="h5 card-title"><a class="stretched-link text-decoration-none" href="@item.Url()">@item.Name</a></h3>
+                        <p class="card-text text-body-secondary mb-0">@(item.Value<string>("description"))</p>
+                    </div></article></div>
+                }
+            </div>
+        </section>
+    </main>
+    <footer class="border-top bg-body-tertiary"><div class="container py-4 small text-body-secondary">© @DateTime.UtcNow.Year @Model.Name</div></footer>
+</body>
+</html>

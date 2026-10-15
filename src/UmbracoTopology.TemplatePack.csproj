@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Casko.UmbracoTopology.Templates</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Casko</Authors>
+    <RepositoryUrl>https://github.com/hallojoe/umbraco-topology</RepositoryUrl>
+    <Description>Local Umbraco 17 CM/CD topology template for dotnet new.</Description>
+    <PackageTags>dotnet-new;templates;umbraco;aspire</PackageTags>
+    <PackageType>Template</PackageType>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="UmbracoTopology.Template/**"
+             Exclude="**/bin/**;**/obj/**;**/node_modules/**;**/__pycache__/**;**/*.pyc;**/.local/**;**/.mcp.json;**/appsettings.Local.json"
+             PackagePath="content/UmbracoTopology.Template/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

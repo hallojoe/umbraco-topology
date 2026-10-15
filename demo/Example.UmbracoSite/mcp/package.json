@@ -1,0 +1,8 @@
+{
+  "name": "example-umbracosite-mcp",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@umbraco-cms/mcp-dev": "17.6.10"
+  }
+}

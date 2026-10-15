@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language alias="en" intName="English (US)" localName="English (US)" culture="en-US">
+  <area alias="healthcheck">
+    <key alias="scheduledHealthCheckEmailSubject">Umbraco health checks for %0%</key>
+    <key alias="scheduledHealthCheckEmailBody">Health checks ran on %0% at %1%.&#10;&#10;%2%</key>
+  </area>
+</language>

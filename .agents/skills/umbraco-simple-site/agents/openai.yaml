@@ -1,0 +1,6 @@
+interface:
+  display_name: "Umbraco Simple Site"
+  short_description: "Copy a simple Umbraco site's uSync assets and views."
+  default_prompt: "Use $umbraco-simple-site to copy the simple site assets into this Umbraco project."
+policy:
+  allow_implicit_invocation: true

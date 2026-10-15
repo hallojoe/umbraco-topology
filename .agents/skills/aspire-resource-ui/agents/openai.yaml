@@ -1,0 +1,6 @@
+interface:
+  display_name: "Aspire Resource UIs"
+  short_description: "Add local UIs for C# Aspire resources."
+  default_prompt: "Use $aspire-resource-ui when adding this C# Aspire resource."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Umbraco AI"
+  short_description: "Configure Umbraco AI features and providers."
+  default_prompt: "Use $umbraco-ai to add an Umbraco AI feature to this project."
+policy:
+  allow_implicit_invocation: true
