@@ -1,0 +1,37 @@
+name: Smoke test
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Aspire CLI
+        run: |
+          dotnet tool install --global Aspire.Cli --version 13.6.0
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+      - name: Check Docker
+        run: docker info
+      - name: Boot and check Single mode
+        run: python3 .agents/skills/verify-umbraco-template/scripts/verify_template.py --single-smoke
