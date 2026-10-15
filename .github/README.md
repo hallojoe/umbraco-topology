@@ -42,10 +42,10 @@ Start Aspire and watch the resources come online. Open the published sample site
 
 ## Get the template now
 
-Install the current prerelease. Then use the annotated command below to generate your solution.
+Install version `1.0.0`. Then use the annotated command below to generate your solution.
 
 ```bash
-dotnet new install Casko.UmbracoTopology.Templates@0.0.1-pre
+dotnet new install Casko.UmbracoTopology.Templates@1.0.0
 ```
 
 ```bash
