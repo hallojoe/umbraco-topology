@@ -1,23 +1,27 @@
 # Umbraco topology example
 
+**Developers! Developers! Developers! Umbraco, Aspire, and the whole local stack. Let's go!**
+
+Build on CM. Serve from a CD pool. Pick your cache and media. See SQL, email, proxy, and MCP work together.
+
 See the [technical README](../README.md) for installation, Python setup, MCP setup, and run commands.
 
 ```mermaid
 flowchart LR
-    browser["Browser"] --> proxy["YARP proxy<br/>optional"]
+    browser["Browser"] --> proxy["Reverse proxy(optional)<br/>YARP"]
     agent["Codex / Claude Code"] -->|stdio| mcp["Local Umbraco MCP"]
     mcp -->|Backoffice API| cm
 
-    subgraph apphost["Aspire AppHost · Cluster mode"]
+    subgraph apphost["Host"]
         proxy --> cm["CM<br/>SchedulingPublisher"]
         proxy --> cd["CD pool<br/>Subscriber × N"]
-        cm --> sql["SQL Server<br/>content DB"]
+        cm --> sql["SQL Server<br/>CMS database"]
         cd --> sql
-        cm --> cache["Redis cache"]
+        cm --> cache["Cache<br/> Redis or SQL Server"]
         cd --> cache
-        cm --> media["Blob media<br/>Azurite"]
+        cm --> media["Media<br/>Azure BLOB or Filesystem"]
         cd --> media
-        cm --> mail["Mailpit<br/>SMTP"]
+        cm --> mail["Email<br/>Mailpit SMTP"]
     end
 ```
 
@@ -66,3 +70,5 @@ template_options=(
 # Create the solution.
 dotnet new casko-umbraco-topology "${template_options[@]}"
 ```
+
+**Build it. Run it. Show it!**
