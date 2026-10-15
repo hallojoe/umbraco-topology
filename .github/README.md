@@ -1,47 +1,97 @@
-# Umbraco! Aspire! AI-ready! Let's build!
+# Start your next Umbraco project with a working local topology
 
-**One template. A complete local CM/CD topology. Your next Umbraco project starts running.**
+**One template gives your team content management, delivery, shared services, and local development tools.**
 
-Stop wiring the same development setup together again. Generate a solution with content management, two delivery nodes, shared services, and a published sample site. Start the cluster with Aspire. See the whole system work.
+Your first day can produce a site you can show. Generate an Umbraco 17 solution with CM and a CD pool. Get SQL Server, cache, media, and local email in the same setup. Aspire starts the resources and shows their health. A published sample site gives you pages to inspect on first boot.
 
-## Look at what you get
+## Give your team a head start
 
-- **A real local cluster:** One CM, two CDs, and a Single mode for focused work.
-- **Content on first boot:** uSync imports a published sample site with Home and child pages.
-- **Your choice of infrastructure:** Select Redis or MSSQL cache. Select Blob or filesystem media independently.
-- **One place to run it:** Aspire starts the web processes, SQL Server, Mailpit, and selected local services.
-- **See what happens:** Aspire collects web traces, metrics, and logs in one dashboard.
-- **Public routes on demand:** Add YARP for CM and CD domains. Set private and public ports when you generate the project.
-- **A clean handoff to AI tools:** A local API user and pinned Umbraco MCP package support Codex and Claude Code.
-- **Proof you can run:** A verification skill builds eight combinations and checks live routing and email.
+- Publish content in CM. Check it through CD nodes that share the database and media store.
+- Choose Redis or SQL cache. Choose Blob or filesystem media. Run with Docker or Podman.
+- Add YARP when you need public CM and CD routes. Inspect health and telemetry in Aspire.
+- Connect Codex or Claude Code through local MCP after CM is ready.
 
-## From template to topology
+Build content models, pages, and delivery rules on a setup your team can repeat. Show a working site while the ideas are fresh.
 
-```bash
-dotnet new install ./src/UmbracoTopology.Template
-dotnet new casko-umbraco-topology --name Acme.UmbracoSite --output ./Acme.UmbracoSite --allow-scripts Yes
-cd Acme.UmbracoSite
-python3 scripts/validate-generated.py
-aspire start --launch-profile Development --non-interactive
+## See the topology
+
+```mermaid
+flowchart LR
+    browser["Browser"] --> proxy["Reverse proxy(optional)<br/>YARP"]
+    agent["Codex / Claude Code"] -->|stdio| mcp["Local Umbraco MCP"]
+    mcp -->|Backoffice API| cm
+
+    subgraph apphost["Host"]
+        proxy --> cm["CM<br/>SchedulingPublisher"]
+        proxy --> cd["CD pool<br/>Subscriber × N"]
+        cm --> sql["SQL Server<br/>CMS database"]
+        cd --> sql
+        cm --> cache["Cache<br/> Redis or SQL Server"]
+        cd --> cache
+        cm --> media["Media<br/>Azure BLOB or Filesystem"]
+        cd --> media
+        cm --> mail["Email<br/>Mailpit SMTP"]
+    end
 ```
 
-That's it. The default setup uses Redis cache, Blob media, and Podman. Pass `--container-runtime docker` if Docker is your local runtime. The generated README gives you the URLs and run commands.
+CD instances share the same database, cache, and media store. The example below selects Redis and Blob media.
 
-## AI-ready means ready to connect
+## Show the work sooner
 
-The template provisions a local API user. It includes a pinned Umbraco Developer MCP package. One script writes ignored MCP configurations for Codex and Claude Code:
+Start Aspire and watch the resources come online. Open the published sample site on CM and CD. Inspect test email in Mailpit and service health in the dashboard. When you change content, check the delivery path through the same local topology. Your team gets a clear starting point for demos, onboarding, and feature work.
+
+## Get the template now
+
+Install the current prerelease. Then use the annotated command below to generate your solution.
 
 ```bash
-npm ci --prefix mcp
-python3 scripts/configure-mcp.py
+dotnet new install Casko.UmbracoTopology.Templates@0.0.1-pre
 ```
 
-Start your MCP client after CM is healthy. Your agent can then use the configured document and media tools. The credentials stay in ignored local files.
+```bash
+# Set the template options.
+template_options=(
+  # Solution name and output folder.
+  --name Example.UmbracoSite
+  --output ./Example.UmbracoSite
 
-## Build with confidence
+  # Local SQL Server password.
+  --sql-password 'Dev1234567890!'
 
-Run the repository's [verification skill](../.agents/skills/verify-umbraco-template/SKILL.md) to generate, inspect, and build every provider combination. Add `--runtime` for live content, media, restart, and MCP checks.
+  # Cache: redis or mssql. Media: blob or filesystem.
+  --cache-provider redis
+  --media-provider blob
 
-**Build the site. Run the cluster. Connect your AI tools. Keep moving!**
+  # Container runtime: podman or docker.
+  --container-runtime podman
 
-This template targets local development. See the [project guide](../README.md) for prerequisites and full setup details.
+  # Local administrator credentials.
+  --admin-email admin@cm.dev.localhost
+  --admin-password '1234567890'
+
+  # Local API user for MCP.
+  --api-user-email apiuser@dev.localhost
+  --api-client-id umbraco-back-office-example
+  --api-client-secret '1234567890'
+
+  # Run the template setup scripts.
+  --allow-scripts Yes
+
+  # Optional CM and CD ports. CD2 uses the next CD port.
+  --cm-port 64222
+  --cd-port 44222
+
+  # Optional YARP reverse proxy, hosts, and port.
+  --reverse-proxy
+  --cm-domain cm.dev.localhost
+  --cd-domain cd.dev.localhost
+  --proxy-port 4443
+)
+
+# Create the solution.
+dotnet new casko-umbraco-topology "${template_options[@]}"
+```
+
+The generated README gives you the run commands and local addresses. The [technical README](../README.md) covers certificates, Python setup, MCP, and verification.
+
+**Install the template now. Generate your solution. Show the site you came to build.**
