@@ -4,7 +4,13 @@
 
 AppHost includes Mailpit for local email. CM and Single send failed health checks to the selected admin address. Aspire Service Defaults adds traces, metrics, and health endpoints. Add `--reverse-proxy` for YARP host routing. Trust the .NET 10 development certificate for the default `*.dev.localhost` hosts. Custom hosts need a supplied certificate.
 
-Install it from this repository and generate a project:
+The current NuGet.org prerelease is `0.0.1-pre`. Install it with:
+
+```bash
+dotnet new install Casko.UmbracoTopology.Templates@0.0.1-pre
+```
+
+To use the template source from this repository, install it and generate a project:
 
 ```bash
 dotnet new install ./src/UmbracoTopology.Template
