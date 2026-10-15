@@ -4,7 +4,12 @@
     <PackageId>Casko.UmbracoTopology.Templates</PackageId>
     <Version>0.1.0</Version>
     <Authors>Casko</Authors>
+    <Copyright>Copyright (c) 2026 hallojoe</Copyright>
     <RepositoryUrl>https://github.com/hallojoe/umbraco-topology</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/hallojoe/umbraco-topology</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>See https://github.com/hallojoe/umbraco-topology/releases for release notes.</PackageReleaseNotes>
     <Description>Local Umbraco 17 CM/CD topology template for dotnet new.</Description>
     <PackageTags>dotnet-new;templates;umbraco;aspire</PackageTags>
     <PackageType>Template</PackageType>
@@ -16,6 +21,8 @@
     <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="../LICENSE" Pack="true" PackagePath="" />
     <Content Include="UmbracoTopology.Template/**"
              Exclude="**/bin/**;**/obj/**;**/node_modules/**;**/__pycache__/**;**/*.pyc;**/.local/**;**/.mcp.json;**/appsettings.Local.json"
              PackagePath="content/UmbracoTopology.Template/%(RecursiveDir)%(Filename)%(Extension)" />
