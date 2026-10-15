@@ -2,6 +2,27 @@
 
 See the [technical README](../README.md) for installation, Python setup, MCP setup, and run commands.
 
+```mermaid
+flowchart LR
+    browser["Browser"] --> proxy["YARP proxy<br/>optional"]
+    agent["Codex / Claude Code"] -->|stdio| mcp["Local Umbraco MCP"]
+    mcp -->|Backoffice API| cm
+
+    subgraph apphost["Aspire AppHost · Cluster mode"]
+        proxy --> cm["CM<br/>SchedulingPublisher"]
+        proxy --> cd["CD pool<br/>Subscriber × N"]
+        cm --> sql["SQL Server<br/>content DB"]
+        cd --> sql
+        cm --> cache["Redis cache"]
+        cd --> cache
+        cm --> media["Blob media<br/>Azurite"]
+        cd --> media
+        cm --> mail["Mailpit<br/>SMTP"]
+    end
+```
+
+CD instances share the same database, cache, and media store. Redis and Blob media are the shown options.
+
 ```bash
 # Set the template options.
 template_options=(
