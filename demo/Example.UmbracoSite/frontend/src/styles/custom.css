@@ -1,0 +1,4 @@
+/* Starlight's visible shortcut is omitted from the search button's accessible name. */
+site-search button[data-open-modal] > kbd {
+  display: none !important;
+}

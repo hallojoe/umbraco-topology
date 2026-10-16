@@ -1,0 +1,20 @@
+---
+import ContentList from './ContentList.astro';
+import { getEvents, getProducts } from '../lib/content';
+import { newestProducts, upcomingEvents } from '../lib/catalog';
+
+const events = upcomingEvents(await getEvents()).slice(0, 2);
+const products = newestProducts(await getProducts()).slice(0, 2);
+---
+
+<section aria-labelledby="latest-events">
+  <h2 id="latest-events">Upcoming events</h2>
+  {events.length > 0 ? <ContentList items={events} dateLabel="Event date" /> : <p>No upcoming events. Check the <a href="/events/">events page</a> for past events.</p>}
+  <p><a href="/events/">View all events</a></p>
+</section>
+
+<section aria-labelledby="latest-products">
+  <h2 id="latest-products">Latest products</h2>
+  <ContentList items={products} dateLabel="Published" />
+  <p><a href="/products/">View all products</a></p>
+</section>

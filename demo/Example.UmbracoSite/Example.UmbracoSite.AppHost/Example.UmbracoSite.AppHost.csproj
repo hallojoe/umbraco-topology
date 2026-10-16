@@ -19,6 +19,7 @@
     <ProjectReference Include="../Example.UmbracoSite.Web/Example.UmbracoSite.Web.csproj" />
     <ProjectReference Include="../Example.UmbracoSite.Yarp/Example.UmbracoSite.Yarp.csproj" Condition="'$(TopologyReverseProxy)' == 'True'" />
     <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
     <PackageReference Include="Aspire.Hosting.Redis" Condition="'$(TopologyCacheProvider)' == 'redis'" />
     <PackageReference Include="Aspire.Hosting.Azure.Storage" Condition="'$(TopologyMediaProvider)' == 'blob'" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.SqlServer.Extensions" />

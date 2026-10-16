@@ -1,0 +1,9 @@
+---
+import ContentList from './ContentList.astro';
+import { getProducts } from '../lib/content';
+import { newestProducts } from '../lib/catalog';
+
+const products = newestProducts(await getProducts());
+---
+
+<ContentList items={products} dateLabel="Published" />

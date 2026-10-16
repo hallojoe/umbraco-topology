@@ -1,0 +1,28 @@
+﻿@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+    Layout = null;
+    var title = Model.Value<string>("title");
+    if (string.IsNullOrWhiteSpace(title)) { title = Model.Name; }
+    var description = Model.Value<string>("description");
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title</title>
+    @if (!string.IsNullOrWhiteSpace(description)) { <meta name="description" content="@description" /> }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="border-bottom bg-body-tertiary"><nav class="container py-3" aria-label="Primary navigation"><a href="/">Home</a></nav></header>
+    <main class="container py-5 flex-grow-1">
+        <article class="col-lg-8">
+            <h1 class="display-5 fw-bold mb-3">@title</h1>
+            @if (!string.IsNullOrWhiteSpace(description)) { <p class="lead">@description</p> }
+            <div>@Model.Value("content")</div>
+        </article>
+    </main>
+</body>
+</html>
