@@ -8,7 +8,8 @@ Your first day can produce a site you can show. Generate an Umbraco 17 solution 
 
 - Publish content in CM. Check it through CD nodes that share the database and media store.
 - Choose Redis or SQL cache. Choose Blob or filesystem media. Run with Docker or Podman.
-- Add YARP when you need public CM and CD routes. Inspect health and telemetry in Aspire.
+- Add YARP when you need public CM and CD routes. 
+- Inspect health and telemetry in Aspire.
 - Connect Codex or Claude Code through local MCP after CM is ready.
 
 Build content models, pages, and delivery rules on a setup your team can repeat. Show a working site while the ideas are fresh.
@@ -42,10 +43,10 @@ Start Aspire and watch the resources come online. Open the published sample site
 
 ## Get the template now
 
-Install the current prerelease. Then use the annotated command below to generate your solution.
+Install version `1.0.0`. Then use the annotated command below to generate your solution.
 
 ```bash
-dotnet new install Casko.UmbracoTopology.Templates@0.0.1-pre
+dotnet new install Casko.UmbracoTopology.Templates@1.0.0
 ```
 
 ```bash

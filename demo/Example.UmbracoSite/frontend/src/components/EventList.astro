@@ -1,0 +1,19 @@
+---
+import ContentList from './ContentList.astro';
+import { getEvents } from '../lib/content';
+import { pastEvents, upcomingEvents } from '../lib/catalog';
+
+const allEvents = await getEvents();
+const upcoming = upcomingEvents(allEvents);
+const past = pastEvents(allEvents);
+---
+
+<section aria-labelledby="upcoming-events">
+  <h2 id="upcoming-events">Upcoming events</h2>
+  {upcoming.length > 0 ? <ContentList items={upcoming} dateLabel="Event date" /> : <p>No upcoming events are scheduled.</p>}
+</section>
+
+{past.length > 0 && <section aria-labelledby="past-events">
+  <h2 id="past-events">Past events</h2>
+  <ContentList items={past} dateLabel="Event date" />
+</section>}

@@ -1,10 +1,12 @@
 using System.Text.Json;
 using Aspire.Hosting.ApplicationModel;
+using Aspire.Hosting.JavaScript;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 var database = builder.AddUmbracoDatabase();
 var mailpit = builder.AddMailPit("mailpit");
+builder.AddDemoFrontend();
 
 string mode = builder.Configuration["TopologyMode"] ?? "Cluster";
 if (mode == "Single")
@@ -43,6 +45,18 @@ else
 }
 
 builder.Build().Run();
+
+internal static class FrontendResources
+{
+    public static IResourceBuilder<ViteAppResource> AddDemoFrontend(this IDistributedApplicationBuilder builder)
+    {
+#pragma warning disable ASPIREJAVASCRIPT001
+        return builder.AddViteApp("frontend", "../frontend")
+            .PublishAsStaticWebsite()
+            .WithExternalHttpEndpoints();
+#pragma warning restore ASPIREJAVASCRIPT001
+    }
+}
 
 internal static class UmbracoResources
 {
