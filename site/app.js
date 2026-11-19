@@ -14,4 +14,5 @@ function valid(){const errors=[];if(!/^[A-Za-z_][A-Za-z0-9_.]*$/.test(val('name'
 $('next').addEventListener('click',()=>{if(!valid())return;if(step<steps.length-1){step++;render();}});
 $('back').addEventListener('click',()=>{step=Math.max(0,step-1);$('error').textContent='';render();});
 $('copy').addEventListener('click',async()=>{if(!valid())return;try{await navigator.clipboard.writeText(build());$('copy').textContent='Copied ✓';setTimeout(()=>$('copy').textContent='Copy command',1800);}catch{$('copy').textContent='Select command above to copy';}});
-$('copyRun').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(runCommands());$('copyRun').textContent='Copied ✓';}catch{$('copyRun').textContent='Select commands above to copy';}});\ndocument.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',()=>{$('error').textContent='';render();}));render();
+$('copyRun').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(runCommands());$('copyRun').textContent='Copied ✓';}catch{$('copyRun').textContent='Select commands above to copy';}});
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',()=>{$('error').textContent='';render();}));render();
